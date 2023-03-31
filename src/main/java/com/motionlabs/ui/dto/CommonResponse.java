@@ -7,7 +7,7 @@ public class CommonResponse<T> {
 
     private final int code;
     private final T data;
-    private final  String message;
+    private final String message;
 
     public CommonResponse(int code, String message) {
         this(code, null, message);
