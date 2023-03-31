@@ -13,7 +13,7 @@ import static org.springframework.restdocs.restassured3.RestAssuredRestDocumenta
 import com.motionlabs.ui.RestDocsTest;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ public class MenstruationDocumentTest extends RestDocsTest {
     @DisplayName("유저의 월경 기록 등록 요청이 정상적일 경우 200 응답을 반환한다.")
     void success_add_menstruation_history() {
 
-        MenstruationHistoryRequest request = new MenstruationHistoryRequest(LocalDateTime.MIN);
+        MenstruationHistoryRequest request = new MenstruationHistoryRequest(LocalDate.MIN);
 
         given(this.spec)
             .filter(document(DOCUMENT_NAME_DEFAULT_FORMAT,

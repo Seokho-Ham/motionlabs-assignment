@@ -1,16 +1,18 @@
 package com.motionlabs.ui.menstruation.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+
 public class MenstruationHistoryRequest {
 
-    private LocalDateTime menstruationStartDate;
+    private LocalDate menstruationStartDate;
 
-    public MenstruationHistoryRequest(LocalDateTime menstruationStartDate) {
+    public MenstruationHistoryRequest(LocalDate menstruationStartDate) {
         this.menstruationStartDate = menstruationStartDate;
     }
+
 }
