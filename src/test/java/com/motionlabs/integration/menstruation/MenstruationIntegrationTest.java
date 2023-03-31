@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.motionlabs.application.menstruation.MenstruationService;
-import com.motionlabs.domain.menstruation.exception.InvalidMenstruationPeriodException;
+import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     void register_menstruation_period_success() {
 
         Long userId = 1L;
-        MenstruationPeriodRequest request = new MenstruationPeriodRequest(14, 28);
+        MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
 
         Long resultId = menstruationService.registerPeriod(userId, request);
 
@@ -30,26 +30,16 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("월경 주기의 값이 올바르지 않을 경우 예외를 반환한다.")
-    void invalid_avg_menstruation_period() {
+    @DisplayName("이미 사용자의 월경 주기 정보가 등록되어 있는 경우 예외를 반환한다.")
+    void already_menstruation_period_registered() {
 
         Long userId = 1L;
-        MenstruationPeriodRequest request = new MenstruationPeriodRequest(-1, 28);
+        MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+
+        menstruationService.registerPeriod(userId, request);
 
         assertThatThrownBy(() -> menstruationService.registerPeriod(userId, request))
-            .isInstanceOf(InvalidMenstruationPeriodException.class);
+            .isInstanceOf(PeriodAlreadyRegisteredException.class);
     }
-
-    @Test
-    @DisplayName("월경 기간의 값이 올바르지 않을 경우 예외를 반환한다.")
-    void invalid_avg_menstruation_days() {
-
-        Long userId = 1L;
-        MenstruationPeriodRequest request = new MenstruationPeriodRequest(14, -1);
-
-        assertThatThrownBy(() -> menstruationService.registerPeriod(userId, request))
-            .isInstanceOf(InvalidMenstruationPeriodException.class);
-    }
-
 
 }

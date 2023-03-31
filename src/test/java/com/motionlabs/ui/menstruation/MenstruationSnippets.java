@@ -44,8 +44,8 @@ public interface MenstruationSnippets {
 
 
     Snippet REGISTER_MENSTRUATION_PERIOD_REQUEST = requestFields(
-        fieldWithPath("avg_menstruation_period").type(JsonFieldType.NUMBER).description("월경 주기 / (일 단위)"),
-        fieldWithPath("avg_menstruation_days").type(JsonFieldType.NUMBER).description("월경 기간 / (일 단위)")
+        fieldWithPath("avgMenstruationPeriod").type(JsonFieldType.NUMBER).description("월경 주기 / (일 단위)"),
+        fieldWithPath("avgMenstruationDays").type(JsonFieldType.NUMBER).description("월경 기간 / (일 단위)")
     );
 
 

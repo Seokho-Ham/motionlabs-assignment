@@ -21,7 +21,7 @@ public class MenstruationDocumentTest extends RestDocsTest {
     @DisplayName("유저의 월경 주기 등록 요청이 정상적일 경우 200 응답을 반환한다.")
     void success_add_menstruation_period() {
 
-        MenstruationPeriodRequest request = new MenstruationPeriodRequest(14, 28);
+        MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
 
         given(this.spec)
             .filter(document(DOCUMENT_NAME_DEFAULT_FORMAT,
