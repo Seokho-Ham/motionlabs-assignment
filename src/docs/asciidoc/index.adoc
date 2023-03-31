@@ -2,3 +2,6 @@
 :toc: left
 :toclevels: 2
 :source-highlighter: highlightjs
+
+== 유저 월경 API
+include::{docdir}/menstruation.adoc[]
