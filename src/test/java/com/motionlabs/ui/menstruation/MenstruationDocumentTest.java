@@ -1,20 +1,21 @@
-package com.motionlabs.ui;
+package com.motionlabs.ui.menstruation;
 
-import static com.motionlabs.ui.MenstruationSnippets.REGISTER_MENSTRUATION_PERIOD_REQUEST;
-import static com.motionlabs.ui.MenstruationSnippets.createCommonNoDataSnippet;
+import static com.motionlabs.ui.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_PERIOD_REQUEST;
+import static com.motionlabs.ui.menstruation.MenstruationSnippets.createCommonNoDataSnippet;
 import static com.motionlabs.ui.dto.ResponseMessages.REGISTER_MENSTRUATION_PERIOD_SUCCESS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
+import com.motionlabs.ui.RestDocsTest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("문서 - 월경 API 문서 테스트")
-public class MenstruationDocumentTest extends RestDocsTest{
+public class MenstruationDocumentTest extends RestDocsTest {
 
     @Test
     @DisplayName("유저의 월경 주기 등록 요청이 정상적일 경우 200 응답을 반환한다.")

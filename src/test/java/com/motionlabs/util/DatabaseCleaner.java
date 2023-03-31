@@ -1,4 +1,4 @@
-package com.motionlabs.integration;
+package com.motionlabs.util;
 
 import com.motionlabs.domain.member.Member;
 import com.motionlabs.domain.member.MemberRepository;

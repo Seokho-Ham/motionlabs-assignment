@@ -1,4 +1,4 @@
-package com.motionlabs.ui;
+package com.motionlabs.ui.menstruation;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
