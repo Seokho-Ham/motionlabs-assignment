@@ -48,5 +48,10 @@ public interface MenstruationSnippets {
         fieldWithPath("avgMenstruationDays").type(JsonFieldType.NUMBER).description("월경 기간 / (일 단위)")
     );
 
+    Snippet REGISTER_MENSTRUATION_HISTORY_REQUEST = requestFields(
+        fieldWithPath("menstruationStartDate").type(JsonFieldType.STRING)
+            .description("월경 시작일 / 형식: yyyy-MM-dd")
+    );
+
 
 }
