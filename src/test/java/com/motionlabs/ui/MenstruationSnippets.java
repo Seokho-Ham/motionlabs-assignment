@@ -23,7 +23,7 @@ public interface MenstruationSnippets {
     FieldDescriptor COMMON_RESPONSE_DATA =
         fieldWithPath("data")
             .type(JsonFieldType.NULL)
-            .description("데이터는 없습니다.");
+            .description("응답 데이터");
 
     static Snippet createCommonNoDataSnippet() {
         return responseFields(

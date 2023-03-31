@@ -12,8 +12,8 @@ public abstract class IntegrationTest {
     private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
-    void clearDatabase() {
-        databaseCleaner.execute();
+    void setDatabase() {
+        databaseCleaner.setDatabase();
     }
 
 }
