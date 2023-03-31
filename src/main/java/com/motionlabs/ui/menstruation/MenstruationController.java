@@ -19,9 +19,10 @@ public class MenstruationController {
 
     @PostMapping("/period")
     public CommonResponseEntity<Void> registerMenstruationPeriod(
+        @UserId Long userId,
         @RequestBody MenstruationPeriodRequest request) {
 
-        menstruationService.registerPeriod(1L, request);
+        menstruationService.registerPeriod(userId, request);
 
         return CommonResponseEntity.success(ResponseMessages.REGISTER_MENSTRUATION_PERIOD_SUCCESS);
     }
