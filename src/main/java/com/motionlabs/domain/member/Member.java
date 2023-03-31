@@ -20,7 +20,6 @@ public class Member {
     private String nickname;
     private String email;
 
-
     public Member(String nickname, String email) {
         this(null, nickname, email);
     }

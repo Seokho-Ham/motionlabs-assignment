@@ -2,6 +2,7 @@ package com.motionlabs.domain.menstruation;
 
 import com.motionlabs.domain.member.Member;
 import com.motionlabs.domain.menstruation.exception.InvalidMenstruationPeriodException;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,26 +27,26 @@ public class MenstruationPeriod {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private int avg_menstruation_period;
-    private int avg_menstruation_days;
+    private int avgMenstruationPeriod;
+    private int avgMenstruationDays;
 
-    public MenstruationPeriod(int avg_menstruation_period, int avg_menstruation_days, Member member) {
-        this(null, avg_menstruation_period, avg_menstruation_days, member);
+    public MenstruationPeriod(Integer avgMenstruationPeriod, Integer avgMenstruationDays, Member member) {
+        this(null, avgMenstruationPeriod, avgMenstruationDays, member);
     }
 
-    public MenstruationPeriod(Long id, int avg_menstruation_period, int avg_menstruation_days, Member member) {
+    public MenstruationPeriod(Long id, Integer avgMenstruationPeriod, Integer avgMenstruationDays, Member member) {
         this.id = id;
-        this.avg_menstruation_period = validateMenstruationPeriod(avg_menstruation_period);
-        this.avg_menstruation_days = validateMenstruationPeriod(avg_menstruation_days);
+        this.avgMenstruationPeriod = validateMenstruationPeriod(avgMenstruationPeriod);
+        this.avgMenstruationDays = validateMenstruationPeriod(avgMenstruationDays);
         this.member = member;
     }
 
-    private int validateMenstruationPeriod(Integer avg_value) {
-        if (avg_value < 0) {
+    private int validateMenstruationPeriod(Integer avgValue) {
+        if (Objects.isNull(avgValue) || avgValue < 0) {
             throw new InvalidMenstruationPeriodException();
         }
 
-        return avg_value;
+        return avgValue;
     }
 
 }

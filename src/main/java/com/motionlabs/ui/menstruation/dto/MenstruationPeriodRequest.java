@@ -9,11 +9,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenstruationPeriodRequest {
 
-    private final int avg_menstruation_period;
-    private final int avg_menstruation_days;
+    private final int avgMenstruationPeriod;
+    private final int avgMenstruationDays;
 
     public MenstruationPeriod convertToEntity(Member member) {
-        return new MenstruationPeriod(avg_menstruation_period, avg_menstruation_days, member);
+        return new MenstruationPeriod(avgMenstruationPeriod, avgMenstruationDays, member);
     }
 
 }
