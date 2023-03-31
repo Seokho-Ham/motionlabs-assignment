@@ -20,7 +20,9 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class RestDocsTest {
 
-    private RequestSpecification spec;
+    protected static final String DOCUMENT_NAME_DEFAULT_FORMAT = "{class-name}/{method-name}";
+
+    protected RequestSpecification spec;
 
     @Autowired
     protected ObjectMapper objectMapper;
