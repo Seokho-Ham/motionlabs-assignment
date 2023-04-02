@@ -41,12 +41,15 @@ public interface MenstruationSnippets {
 
         return requestFields(responseDescriptors);
     }
-
-
+    
     Snippet REGISTER_MENSTRUATION_PERIOD_REQUEST = requestFields(
         fieldWithPath("avgMenstruationPeriod").type(JsonFieldType.NUMBER).description("월경 주기 / (일 단위)"),
         fieldWithPath("avgMenstruationDays").type(JsonFieldType.NUMBER).description("월경 기간 / (일 단위)")
     );
 
+    Snippet REGISTER_MENSTRUATION_HISTORY_REQUEST = requestFields(
+        fieldWithPath("menstruationStartDate").type(JsonFieldType.ARRAY)
+            .description("월경 시작일 / 형식: yyyy-MM-dd")
+    );
 
 }

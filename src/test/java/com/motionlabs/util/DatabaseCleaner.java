@@ -1,7 +1,5 @@
 package com.motionlabs.util;
 
-import com.motionlabs.domain.member.Member;
-import com.motionlabs.domain.member.MemberRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +23,6 @@ public class DatabaseCleaner implements InitializingBean {
 
     private List<String> tableNames;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
     @Override
     public void afterPropertiesSet() throws Exception {
         entityManager.unwrap(Session.class)
@@ -37,7 +31,6 @@ public class DatabaseCleaner implements InitializingBean {
 
     public void setDatabase() {
         execute();
-        createTestData();
     }
 
     @Transactional
@@ -45,11 +38,6 @@ public class DatabaseCleaner implements InitializingBean {
         entityManager.unwrap(Session.class)
             .doWork(this::cleanUpDatabase);
     }
-
-    public void createTestData() {
-        memberRepository.save(new Member("test-user", "test@gmail.com"));
-    }
-
 
     private void getTableNames(Connection conn) throws SQLException {
         List<String> tableNames = new ArrayList<>();
