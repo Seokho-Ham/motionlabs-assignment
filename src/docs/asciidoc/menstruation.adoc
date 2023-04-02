@@ -4,6 +4,7 @@
 | 기능 | API
 
 | <<월경 주기 등록 API>> | POST /api/me/menstruation/period
+| <<월경 기록 등록 API>> | POST /api/me/menstruation/history
 
 |===
 
