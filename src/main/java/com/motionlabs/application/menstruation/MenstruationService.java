@@ -31,9 +31,9 @@ public class MenstruationService {
     private final MenstruationAndOvulationCalculator calculator;
 
     @Transactional
-    public Long registerPeriod(Long userId, MenstruationPeriodRequest request) {
+    public Long registerPeriod(Long memberId, MenstruationPeriodRequest request) {
 
-        Member member = memberRepository.findById(userId)
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::new);
 
         if (periodRepository.existsByMemberId(member.getId())) {

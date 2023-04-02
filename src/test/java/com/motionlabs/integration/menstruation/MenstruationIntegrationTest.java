@@ -15,8 +15,6 @@ import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,8 +75,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @DisplayName("[기록 등록 API] - 월경 기록 등록 요청이 정상적일 경우 생성된 월경기록 객체의 id를 반환한다.")
     void register_menstruation_history_success() {
 
-        LocalDate currentHistory = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest request = new MenstruationHistoryRequest(currentHistory);
+        MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
         Long resultId = menstruationService.registerHistory(EXISTING_MEMBER_ID, request);
 
@@ -89,14 +86,10 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @DisplayName("[기록 등록 API] - 월경 기록 등록 요청이 정상적일 경우 회원의 평균 월경주기를 업데이트 한다.")
     void menstruation_period_success_and_update_average() {
 
-        LocalDate firstHistory = LocalDate.parse("2022-11-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate secondHistory = LocalDate.parse("2022-12-06", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate latestHistory = LocalDate.parse("2023-02-05", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate currentHistory = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest firstRequest = new MenstruationHistoryRequest(firstHistory);
-        MenstruationHistoryRequest secondRequest = new MenstruationHistoryRequest(secondHistory);
-        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest(latestHistory);
-        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(currentHistory);
+        MenstruationHistoryRequest firstRequest = new MenstruationHistoryRequest("2022-11-01");
+        MenstruationHistoryRequest secondRequest = new MenstruationHistoryRequest("2022-12-06");
+        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2023-02-05");
+        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
 
         MenstruationPeriod beforeUpdate = menstruationPeriodRepository.findByMemberId(
             EXISTING_MEMBER_ID).get();
@@ -118,8 +111,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @DisplayName("[기록 등록 API] - 등록된 최근 월경 기록의 개수가 2개 미만일 경우 회원의 평균 월경주기를 업데이트하지 않는다.")
     void menstruation_history_count_is_less_than_two() {
 
-        LocalDate currentHistory = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest request = new MenstruationHistoryRequest(currentHistory);
+        MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
         MenstruationPeriod beforeUpdate = menstruationPeriodRepository.findByMemberId(
             EXISTING_MEMBER_ID).get();
@@ -139,10 +131,8 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 최근 등록된 월경 기록과 현재 등록하는 기록의 간격이 3개월 이상이라면 회원의 평균 월경주기를 업데이트 하지 않는다.")
     void latest_menstruation_history_is_before_three_month() {
-        LocalDate latestHistory = LocalDate.parse("2022-10-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate currentHistory = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest(latestHistory);
-        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(currentHistory);
+        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
+        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
 
         MenstruationPeriod beforeUpdate = menstruationPeriodRepository.findByMemberId(
             EXISTING_MEMBER_ID).get();
@@ -160,10 +150,8 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 동일한 기간에 중복되는 월경기록을 등록한다면 예외를 반환한다.")
     void duplicated_history() {
-        LocalDate latestHistory = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate currentHistory = LocalDate.parse("2023-03-05", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest(latestHistory);
-        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(currentHistory);
+        MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2023-03-01");
+        MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-05");
 
         menstruationService.registerHistory(EXISTING_MEMBER_ID, latestRequest);
 
@@ -175,9 +163,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 회원의 월경 주기가 등록되어 있지 않으면 예외를 반환한다.")
     void menstruation_period_not_registered() {
-
-        LocalDate menstruationDate = LocalDate.parse("2023-03-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        MenstruationHistoryRequest request = new MenstruationHistoryRequest(menstruationDate);
+        MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
         assertThatThrownBy(() -> menstruationService.registerHistory(NEW_MEMBER_ID, request))
             .isInstanceOf(MenstruationPeriodNotRegistered.class);
@@ -186,9 +172,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 회원의 월경 주기가 현재 날짜보다 이후면 예외를 반환한다.")
     void invalid_menstruation_date() {
-
-        LocalDate menstruationDate = LocalDate.MAX;
-        MenstruationHistoryRequest request = new MenstruationHistoryRequest(menstruationDate);
+        MenstruationHistoryRequest request = new MenstruationHistoryRequest("9999-12-31");
 
         assertThatThrownBy(() -> menstruationService.registerHistory(EXISTING_MEMBER_ID, request))
             .isInstanceOf(InvalidMenstruationDate.class);

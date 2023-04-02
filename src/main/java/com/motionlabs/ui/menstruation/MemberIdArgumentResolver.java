@@ -11,11 +11,11 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
+public class MemberIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(UserId.class) &&
+        return parameter.hasParameterAnnotation(MemberId.class) &&
             Long.class.equals(parameter.getParameterType());
     }
 
@@ -25,7 +25,7 @@ public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest nativeRequest = Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class));
 
         return Arrays.stream(nativeRequest.getCookies())
-            .filter(cookie -> cookie.getName().equals("userId"))
+            .filter(cookie -> cookie.getName().equals("memberId"))
             .mapToLong(cookie -> Long.parseLong(cookie.getValue()))
             .findFirst()
             .orElseThrow(NeedAuthorizationException::new);
