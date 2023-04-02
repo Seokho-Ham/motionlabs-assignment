@@ -47,8 +47,6 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[주기 등록 API] - 월경 주기 요청이 정상적일 경우 생성된 월경주기 객체의 id를 반환한다.")
     void register_menstruation_period_success() {
-
-
         MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
 
         Long resultId = menstruationService.registerPeriod(NEW_MEMBER_ID, request);
@@ -59,8 +57,6 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[주기 등록 API] - 이미 사용자의 월경 주기 정보가 등록되어 있는 경우 예외를 반환한다.")
     void already_menstruation_period_registered() {
-
-
         MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
 
         menstruationService.registerPeriod(NEW_MEMBER_ID, request);
@@ -74,7 +70,6 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 월경 기록 등록 요청이 정상적일 경우 생성된 월경기록 객체의 id를 반환한다.")
     void register_menstruation_history_success() {
-
         MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
         Long resultId = menstruationService.registerHistory(EXISTING_MEMBER_ID, request);
@@ -85,7 +80,6 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 월경 기록 등록 요청이 정상적일 경우 회원의 평균 월경주기를 업데이트 한다.")
     void menstruation_period_success_and_update_average() {
-
         MenstruationHistoryRequest firstRequest = new MenstruationHistoryRequest("2022-11-01");
         MenstruationHistoryRequest secondRequest = new MenstruationHistoryRequest("2022-12-06");
         MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2023-02-05");
@@ -110,7 +104,6 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Test
     @DisplayName("[기록 등록 API] - 등록된 최근 월경 기록의 개수가 2개 미만일 경우 회원의 평균 월경주기를 업데이트하지 않는다.")
     void menstruation_history_count_is_less_than_two() {
-
         MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
         MenstruationPeriod beforeUpdate = menstruationPeriodRepository.findByMemberId(

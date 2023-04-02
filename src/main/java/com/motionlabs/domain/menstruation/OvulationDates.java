@@ -33,7 +33,8 @@ public class OvulationDates {
     }
 
     private void validateEndDate(LocalDate ovulationEndDate) {
-        if(this.ovulationStartDate.isAfter(ovulationEndDate)){
+        if(Objects.isNull(ovulationEndDate)
+            || this.ovulationStartDate.isAfter(ovulationEndDate)){
             throw new InvalidOvulationDate();
         }
     }
