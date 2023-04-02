@@ -49,4 +49,7 @@ public class MenstruationPeriod {
         return avgValue;
     }
 
+    public void updatePeriodAverage(int totalPeriods) {
+        this.avgMenstruationPeriod = totalPeriods;
+    }
 }
