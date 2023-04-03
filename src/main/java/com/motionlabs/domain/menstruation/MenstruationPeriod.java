@@ -19,6 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MenstruationPeriod {
 
+    private static final int MAX_PERIOD = 45;
+    private static final int MIN_PERIOD = 20;
+    private static final int MAX_DAYS = 8;
+    private static final int MIN_DAYS = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,26 +35,39 @@ public class MenstruationPeriod {
     private int avgMenstruationPeriod;
     private int avgMenstruationDays;
 
-    public MenstruationPeriod(Integer avgMenstruationPeriod, Integer avgMenstruationDays, Member member) {
+    public MenstruationPeriod(Integer avgMenstruationPeriod, Integer avgMenstruationDays,
+        Member member) {
         this(null, avgMenstruationPeriod, avgMenstruationDays, member);
     }
 
-    public MenstruationPeriod(Long id, Integer avgMenstruationPeriod, Integer avgMenstruationDays, Member member) {
+    public MenstruationPeriod(Long id, Integer avgMenstruationPeriod, Integer avgMenstruationDays,
+        Member member) {
         this.id = id;
-        this.avgMenstruationPeriod = validateMenstruationPeriod(avgMenstruationPeriod);
-        this.avgMenstruationDays = validateMenstruationPeriod(avgMenstruationDays);
+        validateMenstruationPeriod(avgMenstruationPeriod);
+        this.avgMenstruationPeriod = avgMenstruationPeriod;
+        validateMenstruationDays(avgMenstruationDays);
+        this.avgMenstruationDays = avgMenstruationDays;
         this.member = member;
     }
 
-    private int validateMenstruationPeriod(Integer avgValue) {
-        if (Objects.isNull(avgValue) || avgValue < 0) {
+    private void validateMenstruationDays(Integer avgMenstruationDays) {
+        if (Objects.isNull(avgMenstruationDays)
+            || avgMenstruationDays < MIN_DAYS
+            || avgMenstruationDays > MAX_DAYS) {
             throw new InvalidMenstruationPeriodException();
         }
+    }
 
-        return avgValue;
+    private void validateMenstruationPeriod(Integer avgMenstruationPeriod) {
+        if (Objects.isNull(avgMenstruationPeriod)
+            || avgMenstruationPeriod < MIN_PERIOD
+            || avgMenstruationPeriod > MAX_PERIOD) {
+            throw new InvalidMenstruationPeriodException();
+        }
     }
 
     public void updatePeriodAverage(int totalPeriods) {
         this.avgMenstruationPeriod = totalPeriods;
     }
+
 }

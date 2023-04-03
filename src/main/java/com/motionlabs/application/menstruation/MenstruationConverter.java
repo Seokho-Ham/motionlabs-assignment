@@ -5,6 +5,7 @@ import com.motionlabs.domain.menstruation.MenstruationDates;
 import com.motionlabs.domain.menstruation.MenstruationHistory;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.OvulationDates;
+import com.motionlabs.ui.dto.MenstruationOvulationResponse;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,28 @@ public class MenstruationConverter {
             period);
 
         return new MenstruationHistory(member, menstruationDates, ovulationDates);
+    }
+
+    public MenstruationOvulationResponse convertToResponse(LocalDate menstruationStartDate,
+        MenstruationPeriod period) {
+
+        LocalDate nextMenstruationStartDate = calculator.calculateNextMenstruationStartDate(
+            menstruationStartDate, period.getAvgMenstruationPeriod());
+        LocalDate nextMenstruationEndDate = nextMenstruationStartDate.plusDays(period.getAvgMenstruationDays());
+        LocalDate ovulationStartDate = calculator.calculateOvulationStartDate(nextMenstruationStartDate,
+            period.getAvgMenstruationPeriod());
+        LocalDate ovulationEndDate = calculator.calculateOvulationEndDate(nextMenstruationStartDate,
+            period.getAvgMenstruationPeriod());
+
+        return new MenstruationOvulationResponse(
+            nextMenstruationStartDate,
+            nextMenstruationEndDate,
+            calculator.calculateDateDuration(nextMenstruationStartDate, nextMenstruationEndDate),
+            ovulationStartDate,
+            ovulationEndDate,
+            calculator.calculateDateDuration(ovulationStartDate, ovulationEndDate)
+        );
+
     }
 
     private OvulationDates getOvulationDates(LocalDate menstruationStartDate,

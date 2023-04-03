@@ -3,15 +3,17 @@ package com.motionlabs.integration.menstruation;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import com.motionlabs.application.member.exception.MemberNotFoundException;
 import com.motionlabs.application.menstruation.MenstruationService;
 import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
 import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
 import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
-import com.motionlabs.domain.menstruation.MenstruationPeriodRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
+import com.motionlabs.ui.dto.MemberMenstruationHistoryResponse;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
@@ -55,16 +57,17 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @Test
         @DisplayName("월경 주기 요청이 정상적일 경우 생성된 월경주기 객체의 id를 반환한다.")
         void register_menstruation_period_success() {
-            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 7);
 
             Long resultId = menstruationService.registerPeriod(CLEAR_MEMBER_ID, request);
 
             assertThat(resultId).isNotNull();
         }
+
         @Test
         @DisplayName("이미 사용자의 월경 주기 정보가 등록되어 있는 경우 예외를 반환한다.")
         void already_menstruation_period_registered() {
-            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 7);
 
             menstruationService.registerPeriod(CLEAR_MEMBER_ID, request);
 
@@ -77,6 +80,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Nested
     @DisplayName("[월경 기록 등록 API]")
     class MenstruationHistoryRegister {
+
         @Test
         @DisplayName("월경 기록 등록 요청이 정상적일 경우 생성된 월경기록 객체의 id를 반환한다.")
         void register_menstruation_history_success() {
@@ -132,8 +136,8 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         }
 
         @Test
-        @DisplayName("최근 등록된 월경 기록들간의 간격이 3개월 이상이라면 회원의 평균 월경주기를 업데이트 하지 않는다.")
-        void latest_menstruation_history_is_before_three_month() {
+        @DisplayName("최근 3개월 간의 기록들을 기준으로 평균 주기를 계산했을때 최대, 최소를 벗어날 경우 회원의 평균 월경주기를 업데이트 하지 않는다.")
+        void period_average_is_out_of_bound() {
             MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
             MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
 
@@ -242,6 +246,60 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             assertThatThrownBy(() -> menstruationService.deleteHistory(MEMBER_ID_WITH_HISTORIES, targetStartDate))
                 .isInstanceOf(MenstruationHistoryNotFound.class);
         }
+    }
+
+    @Nested
+    @DisplayName("[월경 기록 조회 API]")
+    class GetMenstruationHistory {
+
+        @Test
+        @DisplayName("월경 기록 조회 요청이 올바를 경우 월경기록 목록을 반환한다.")
+        void get_ovulation_histories_success() {
+
+            MemberMenstruationHistoryResponse menstruationHistories = menstruationService.getMenstruationHistories(
+                MEMBER_ID_WITH_HISTORIES);
+
+            assertThat(
+                menstruationHistories.getHistory().getTextStyle().isUnderlineStatus()).isTrue();
+            assertThat(
+                menstruationHistories.getExpects().getTextStyle().isUnderlineStatus()).isFalse();
+            assertThat(menstruationHistories.getHistory().getResults().size()).isEqualTo(3);
+            assertThat(menstruationHistories.getExpects().getResults().size()).isEqualTo(3);
+        }
+
+        @Test
+        @DisplayName("유저의 월경 기록이 존재하지 않을 경우 빈 결과를 반환한다.")
+        void get_empty_ovulation_histories_success() {
+
+            MemberMenstruationHistoryResponse menstruationHistories = menstruationService.getMenstruationHistories(
+                MEMBER_ID_WITH_PERIOD);
+
+            assertThat(
+                menstruationHistories.getHistory().getTextStyle().isUnderlineStatus()).isTrue();
+            assertThat(
+                menstruationHistories.getExpects().getTextStyle().isUnderlineStatus()).isFalse();
+            assertThat(menstruationHistories.getHistory().getResults().size()).isZero();
+            assertThat(menstruationHistories.getExpects().getResults().size()).isZero();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 유저의 경우 예외를 반환한다.")
+        void member_not_found() {
+
+            assertThatThrownBy(() -> menstruationService.getMenstruationHistories(-1L))
+                .isInstanceOf(MemberNotFoundException.class);
+
+        }
+
+        @Test
+        @DisplayName("월경 주기가 존재하지 않는 경우 예외를 반환한다.")
+        void period_not_registered() {
+
+            assertThatThrownBy(() -> menstruationService.getMenstruationHistories(CLEAR_MEMBER_ID))
+                .isInstanceOf(MenstruationPeriodNotRegistered.class);
+
+        }
+
     }
 
 

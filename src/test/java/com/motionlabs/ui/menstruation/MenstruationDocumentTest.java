@@ -1,9 +1,11 @@
 package com.motionlabs.ui.menstruation;
 
 import static com.motionlabs.ui.dto.ResponseMessages.DELETE_MENSTRUATION_HISTORY_SUCCESS;
+import static com.motionlabs.ui.dto.ResponseMessages.READ_ALL_MENSTRUATION_HISTORIES_SUCCESS;
 import static com.motionlabs.ui.dto.ResponseMessages.REGISTER_MENSTRUATION_HISTORY_SUCCESS;
 import static com.motionlabs.ui.dto.ResponseMessages.REGISTER_MENSTRUATION_PERIOD_SUCCESS;
 import static com.motionlabs.ui.menstruation.MenstruationSnippets.DELETE_MENSTRUATION_HISTORY_REQUEST;
+import static com.motionlabs.ui.menstruation.MenstruationSnippets.GET_MENSTRUATION_HISTORIES_RESPONSE;
 import static com.motionlabs.ui.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_HISTORY_REQUEST;
 import static com.motionlabs.ui.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_PERIOD_REQUEST;
 import static com.motionlabs.ui.menstruation.MenstruationSnippets.createCommonNoDataSnippet;
@@ -45,7 +47,7 @@ public class MenstruationDocumentTest extends RestDocsTest {
     @DisplayName("유저의 월경 주기 등록 요청이 정상적일 경우 200 응답을 반환한다.")
     void success_add_menstruation_period() {
 
-        MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+        MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 7);
 
         given(this.spec)
             .filter(document(DOCUMENT_NAME_DEFAULT_FORMAT,
@@ -106,5 +108,26 @@ public class MenstruationDocumentTest extends RestDocsTest {
             .body("message", equalTo(DELETE_MENSTRUATION_HISTORY_SUCCESS.getMessage()));
 
     }
+
+    @Test
+    @DisplayName("유저의 월경 기록 조회 요청이 정상적일 경우 200 응답과 기록 목록을 반환한다.")
+    void success_get_all_menstruation_histories() {
+
+        given(this.spec)
+            .filter(document(DOCUMENT_NAME_DEFAULT_FORMAT, GET_MENSTRUATION_HISTORIES_RESPONSE))
+            .cookie("memberId", MEMBER_ID_WITH_HISTORIES)
+            .param("targetStartDate", "2023-03-01")
+
+        .when()
+            .get("/api/me/menstruation/histories")
+
+        .then()
+            .log().all()
+            .statusCode(is(HttpStatus.OK.value()))
+            .body("code", equalTo(HttpStatus.OK.value()))
+            .body("message", equalTo(READ_ALL_MENSTRUATION_HISTORIES_SUCCESS.getMessage()));
+
+    }
+
 
 }
