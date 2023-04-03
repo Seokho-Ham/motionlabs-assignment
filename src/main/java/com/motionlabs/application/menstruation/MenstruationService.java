@@ -1,6 +1,7 @@
 package com.motionlabs.application.menstruation;
 
 import com.motionlabs.application.member.exception.MemberNotFoundException;
+import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
 import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.member.Member;
@@ -12,8 +13,10 @@ import com.motionlabs.domain.menstruation.MenstruationPeriodRepository;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MenstruationService {
 
-    private static final int MAX_MENSTRUATION_AVG_TERM = 3;
+    private static final int MAX_MENSTRUATION_AVG = 4;
 
     private final MenstruationPeriodRepository periodRepository;
     private final MenstruationHistoryRepository historyRepository;
@@ -59,33 +62,55 @@ public class MenstruationService {
 
         saveMenstruationHistory(request, menstruationHistory);
 
-        List<MenstruationHistory> latestHistories = historyRepository.findLatestHistoriesByMemberId(
-            memberId,
-            request.getMenstruationStartDate().minusMonths(MAX_MENSTRUATION_AVG_TERM));
+        updateMemberMenstruationPeriod(memberId, menstruationPeriod);
 
-        if (latestHistories.size() < 2) {
-            return menstruationHistory.getId();
-        }
+        return menstruationHistory.getId();
+    }
 
-        updateMemberMenstruationPeriod(latestHistories, menstruationPeriod);
+    @Transactional
+    public Long deleteHistory(Long memberId, LocalDate targetStartDate) {
+
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(MemberNotFoundException::new);
+        MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
+                memberId)
+            .orElseThrow(MenstruationPeriodNotRegistered::new);
+
+        MenstruationHistory menstruationHistory = historyRepository.findByTargetDate(memberId,
+                targetStartDate)
+            .orElseThrow(MenstruationHistoryNotFound::new);
+
+        historyRepository.delete(menstruationHistory);
+
+        updateMemberMenstruationPeriod(memberId, menstruationPeriod);
 
         return menstruationHistory.getId();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    protected void updateMemberMenstruationPeriod(List<MenstruationHistory> latestHistories,
+    protected void updateMemberMenstruationPeriod(Long memberId,
         MenstruationPeriod menstruationPeriod) {
+        List<MenstruationHistory> latestHistories = historyRepository.findLatestHistoriesByMemberId(
+            memberId, Pageable.ofSize(MAX_MENSTRUATION_AVG));
+
+        if (latestHistories.size() < 2) {
+            return;
+        }
+
         int totalPeriods = calculator.calculateMenstruationPeriodAverage(latestHistories);
-        menstruationPeriod.updatePeriodAverage(totalPeriods);
+        System.out.println(totalPeriods);
+        if (totalPeriods > 0) {
+            menstruationPeriod.updatePeriodAverage(totalPeriods);
+        }
     }
 
     private void saveMenstruationHistory(MenstruationHistoryRequest request,
         MenstruationHistory menstruationHistory) {
-        if (historyRepository.existByTargetDate(request.getMenstruationStartDate()).isPresent()) {
+        if (historyRepository.existsTargetDate(menstruationHistory.getMember().getId(),
+            request.getMenstruationStartDate()).isPresent()) {
             throw new DuplicatedMenstruationHistoryException();
         }
 
         historyRepository.save(menstruationHistory);
     }
-
 }
