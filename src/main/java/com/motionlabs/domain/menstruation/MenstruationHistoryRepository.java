@@ -17,8 +17,10 @@ public interface MenstruationHistoryRepository extends JpaRepository<Menstruatio
         @Param("targetDate") LocalDate targetDate);
 
     @Query("select h from MenstruationHistory h "
-        + "where h.menstruationDates.menstruationStartDate <= :targetDate "
+        + "where h.member.id = :memberId "
+        + "and h.menstruationDates.menstruationStartDate <= :targetDate "
         + "and h.menstruationDates.menstruationEndDate >= :targetDate")
-    Optional<MenstruationHistory> existByTargetDate(@Param("targetDate") LocalDate targetDate);
+    Optional<MenstruationHistory> existByTargetDate(@Param("memberId") Long memberId,
+        @Param("targetDate") LocalDate targetDate);
 
 }
