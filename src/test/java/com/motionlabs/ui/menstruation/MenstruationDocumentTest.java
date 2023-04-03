@@ -30,6 +30,7 @@ public class MenstruationDocumentTest extends RestDocsTest {
     private static long CLEAR_MEMBER_ID;
     private static long MEMBER_ID_WITH_PERIOD;
     private static long MEMBER_ID_WITH_ONE_HISTORY;
+    private static long MEMBER_ID_WITH_HISTORIES;
 
     @Autowired
     private TestDataProvider testDataProvider;
@@ -39,6 +40,7 @@ public class MenstruationDocumentTest extends RestDocsTest {
         CLEAR_MEMBER_ID = testDataProvider.setClearMember();
         MEMBER_ID_WITH_PERIOD = testDataProvider.setMemberWithPeriod();
         MEMBER_ID_WITH_ONE_HISTORY = testDataProvider.setMemberWithOneHistory();
+        MEMBER_ID_WITH_HISTORIES = testDataProvider.setMemberWithHistories();
     }
 
     @Test
@@ -113,13 +115,14 @@ public class MenstruationDocumentTest extends RestDocsTest {
 
         given(this.spec)
             .filter(document(DOCUMENT_NAME_DEFAULT_FORMAT, GET_MENSTRUATION_HISTORIES_RESPONSE))
-            .cookie("memberId", MEMBER_ID_WITH_ONE_HISTORY)
+            .cookie("memberId", MEMBER_ID_WITH_HISTORIES)
             .param("targetStartDate", "2023-03-01")
 
         .when()
-            .delete("/api/me/menstruation/histories")
+            .get("/api/me/menstruation/histories")
 
         .then()
+            .log().all()
             .statusCode(is(HttpStatus.OK.value()))
             .body("code", equalTo(HttpStatus.OK.value()))
             .body("message", equalTo(READ_ALL_MENSTRUATION_HISTORIES_SUCCESS.getMessage()));

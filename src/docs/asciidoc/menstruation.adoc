@@ -6,6 +6,7 @@
 | <<월경 주기 등록 API>> | POST /api/me/menstruation/period
 | <<월경 기록 등록 API>> | POST /api/me/menstruation/history
 | <<월경 기록 삭제 API>> | DELETE /api/me/menstruation/history
+| <<월경 기록 조회 API>> | GET /api/me/menstruation/histories
 
 |===
 
@@ -58,4 +59,20 @@ operation::menstruation-document-test/success_delete_menstruation_history[snippe
 ===== Response
 
 operation::menstruation-document-test/success_delete_menstruation_history[snippets='http-response,response-fields']
+
+=== 월경 기록 조회 API
+
+API : `GET /api/me/menstruation/histories`
+
+유저의 월경 기록을 조회합니다.
+
+==== `200 OK`
+
+===== Request
+
+operation::menstruation-document-test/success_get_all_menstruation_histories[snippets='http-request']
+
+===== Response
+
+operation::menstruation-document-test/success_get_all_menstruation_histories[snippets='http-response,response-fields']
 

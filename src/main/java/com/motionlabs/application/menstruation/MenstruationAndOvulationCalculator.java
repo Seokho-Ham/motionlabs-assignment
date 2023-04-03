@@ -73,7 +73,7 @@ public class MenstruationAndOvulationCalculator {
         return menstruationStartDate.plusDays(avgMenstruationPeriod);
     }
 
-    private long calculateDateDuration(LocalDate startDate, LocalDate endDate) {
+    public int calculateDateDuration(LocalDate startDate, LocalDate endDate) {
         return Period.between(startDate, endDate).getDays();
     }
 }

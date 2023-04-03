@@ -1,6 +1,7 @@
 package com.motionlabs.domain.menstruation.repository;
 
 import com.motionlabs.domain.menstruation.MenstruationHistory;
+import com.motionlabs.ui.dto.MenstruationOvulationResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +17,6 @@ public interface MenstruationHistoryReadRepository {
     Optional<MenstruationHistory> findByTargetDate(@Param("memberId") Long memberId,
         @Param("targetDate") LocalDate targetDate);
 
+    List<MenstruationOvulationResponse> findAllHistories(@Param("memberId") Long memberId);
 
 }

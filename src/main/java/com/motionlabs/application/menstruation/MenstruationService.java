@@ -11,9 +11,12 @@ import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.repository.MenstruationHistoryRepository;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
+import com.motionlabs.ui.dto.MemberMenstruationHistoryResponse;
+import com.motionlabs.ui.dto.MenstruationOvulationResponse;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,22 @@ public class MenstruationService {
     private final MemberRepository memberRepository;
     private final MenstruationConverter converter;
     private final MenstruationAndOvulationCalculator calculator;
+
+    @Transactional(readOnly = true)
+    public MemberMenstruationHistoryResponse getMenstruationHistories(Long memberId) {
+
+        Member member = memberRepository.findMemberById(memberId)
+            .orElseThrow(MemberNotFoundException::new);
+
+        MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
+                memberId)
+            .orElseThrow(MenstruationPeriodNotRegistered::new);
+
+        List<MenstruationOvulationResponse> histories = historyRepository.findAllHistories(
+            memberId);
+
+        return createMenstruationHistoryResponse(menstruationPeriod, histories);
+    }
 
     @Transactional
     public Long registerPeriod(Long memberId, MenstruationPeriodRequest request) {
@@ -60,7 +79,6 @@ public class MenstruationService {
             menstruationPeriod, request);
 
         saveMenstruationHistory(request, menstruationHistory);
-
         updateMemberMenstruationPeriod(memberId, menstruationPeriod);
 
         return menstruationHistory.getId();
@@ -112,4 +130,33 @@ public class MenstruationService {
 
         historyRepository.save(menstruationHistory);
     }
+
+    private MemberMenstruationHistoryResponse createMenstruationHistoryResponse(
+        MenstruationPeriod menstruationPeriod, List<MenstruationOvulationResponse> histories) {
+        if (histories.isEmpty()) {
+            return MemberMenstruationHistoryResponse.emptyResponse();
+        }
+
+        List<MenstruationOvulationResponse> expects = createExpectMenstruationResponse(
+            histories, menstruationPeriod);
+
+        return MemberMenstruationHistoryResponse.response(histories, expects);
+    }
+
+    private List<MenstruationOvulationResponse> createExpectMenstruationResponse(
+        List<MenstruationOvulationResponse> histories, MenstruationPeriod period) {
+
+        List<MenstruationOvulationResponse> result = new ArrayList<>();
+        MenstruationOvulationResponse latest = histories.get(histories.size() - 1);
+
+        for (int i = 0; i < 3; i++) {
+            MenstruationOvulationResponse response = converter.convertToResponse(
+                latest.getMenstruationStartDate(), period);
+            result.add(response);
+            latest = response;
+        }
+
+        return result;
+    }
+
 }

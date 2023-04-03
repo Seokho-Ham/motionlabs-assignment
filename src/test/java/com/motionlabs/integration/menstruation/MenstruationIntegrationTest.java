@@ -13,7 +13,7 @@ import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
-import com.motionlabs.ui.dto.MemberMenstruationOvulationResponse;
+import com.motionlabs.ui.dto.MemberMenstruationHistoryResponse;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
@@ -255,13 +255,13 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @DisplayName("월경 기록 조회 요청이 올바를 경우 월경기록 목록을 반환한다.")
         void get_ovulation_histories_success() {
 
-            MemberMenstruationOvulationResponse menstruationHistories = menstruationService.getMenstruationHistories(
+            MemberMenstruationHistoryResponse menstruationHistories = menstruationService.getMenstruationHistories(
                 MEMBER_ID_WITH_HISTORIES);
 
             assertThat(
-                menstruationHistories.getHistory().getTextStyle().isUnderLineStatus()).isTrue();
+                menstruationHistories.getHistory().getTextStyle().isUnderlineStatus()).isTrue();
             assertThat(
-                menstruationHistories.getExpects().getTextStyle().isUnderLineStatus()).isFalse();
+                menstruationHistories.getExpects().getTextStyle().isUnderlineStatus()).isFalse();
             assertThat(menstruationHistories.getHistory().getResults().size()).isEqualTo(3);
             assertThat(menstruationHistories.getExpects().getResults().size()).isEqualTo(3);
         }
@@ -270,13 +270,13 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @DisplayName("유저의 월경 기록이 존재하지 않을 경우 빈 결과를 반환한다.")
         void get_empty_ovulation_histories_success() {
 
-            MemberMenstruationOvulationResponse menstruationHistories = menstruationService.getMenstruationHistories(
+            MemberMenstruationHistoryResponse menstruationHistories = menstruationService.getMenstruationHistories(
                 MEMBER_ID_WITH_PERIOD);
 
             assertThat(
-                menstruationHistories.getHistory().getTextStyle().isUnderLineStatus()).isTrue();
+                menstruationHistories.getHistory().getTextStyle().isUnderlineStatus()).isTrue();
             assertThat(
-                menstruationHistories.getExpects().getTextStyle().isUnderLineStatus()).isFalse();
+                menstruationHistories.getExpects().getTextStyle().isUnderlineStatus()).isFalse();
             assertThat(menstruationHistories.getHistory().getResults().size()).isZero();
             assertThat(menstruationHistories.getExpects().getResults().size()).isZero();
         }

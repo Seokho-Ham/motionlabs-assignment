@@ -25,6 +25,4 @@ public class MemberReadRepositoryImpl implements MemberReadRepository {
         );
     }
 
-
-
 }
