@@ -18,11 +18,10 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-    show-sql: true
     open-in-view: false
     defer-datasource-initialization: true
 
 logging:
   level:
-    com:
-      motionlabs: debug
+    com.motionlabs: debug
+    org.hibernate.SQL: debug
