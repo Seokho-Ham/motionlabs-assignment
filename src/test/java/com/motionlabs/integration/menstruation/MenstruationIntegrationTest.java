@@ -132,7 +132,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         }
 
         @Test
-        @DisplayName("최근 등록된 월경 기록과 현재 등록하는 기록의 간격이 3개월 이상이라면 회원의 평균 월경주기를 업데이트 하지 않는다.")
+        @DisplayName("최근 등록된 월경 기록들간의 간격이 3개월 이상이라면 회원의 평균 월경주기를 업데이트 하지 않는다.")
         void latest_menstruation_history_is_before_three_month() {
             MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
             MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
@@ -187,7 +187,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @Test
         @DisplayName("월경 기록 삭제 요청이 정상적일 경우 삭제된 데이터의 id를 반환한다.")
         void delete_history_success() {
-            LocalDate targetStartDate = LocalDate.parse("2023-03-01",
+            LocalDate targetStartDate = LocalDate.parse("2023-01-01",
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             Long resultId = menstruationService.deleteHistory(MEMBER_ID_WITH_HISTORIES, targetStartDate);
@@ -198,7 +198,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @Test
         @DisplayName("월경 기록 삭제가 정상적으로 이루어졌을 경우 유저의 평균 월경주기를 업데이트한다.")
         void update_menstruation_period() {
-            LocalDate targetStartDate = LocalDate.parse("2023-03-01",
+            LocalDate targetStartDate = LocalDate.parse("2023-01-01",
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             MenstruationPeriod beforeUpdate = periodRepository.findByMemberId(
