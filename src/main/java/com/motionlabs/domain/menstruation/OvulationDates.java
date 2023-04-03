@@ -2,7 +2,7 @@ package com.motionlabs.domain.menstruation;
 
 import com.motionlabs.domain.menstruation.exception.InvalidOvulationDate;
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -40,8 +40,7 @@ public class OvulationDates {
     }
 
     private int calculateDays() {
-        return Period.between(ovulationStartDate, ovulationEndDate)
-            .getDays();
+        return (int) ChronoUnit.DAYS.between(ovulationStartDate, ovulationEndDate);
     }
 
 

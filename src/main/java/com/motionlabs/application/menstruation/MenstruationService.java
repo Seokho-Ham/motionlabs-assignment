@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MenstruationService {
 
-    private static final int MAX_MENSTRUATION_AVG = 4;
+    private static final int MAX_MENSTRUATION_AVG = 7;
 
     private final MenstruationPeriodRepository periodRepository;
     private final MenstruationHistoryRepository historyRepository;
@@ -115,7 +115,7 @@ public class MenstruationService {
         }
 
         int totalPeriods = calculator.calculateMenstruationPeriodAverage(latestHistories);
-        System.out.println(totalPeriods);
+
         if (totalPeriods > 0) {
             menstruationPeriod.updatePeriodAverage(totalPeriods);
         }

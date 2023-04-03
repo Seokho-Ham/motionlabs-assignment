@@ -20,7 +20,7 @@ public class MenstruationPeriodTest {
     void create_menstruation_period() {
 
         int avgPeriod = 28;
-        int avgDays = 14;
+        int avgDays = 8;
         Member member = new Member("test-user", "test@gmail.com");
         MenstruationPeriod result = new MenstruationPeriod(avgPeriod, avgDays, member);
 
@@ -30,7 +30,7 @@ public class MenstruationPeriodTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = {-1})
+    @ValueSource(ints = {-1, 50})
     @DisplayName("월경 주기의 값이 올바르지 않을 경우 예외를 반환한다.")
     void invalid_avg_menstruation_period(Integer period) {
 
@@ -42,7 +42,7 @@ public class MenstruationPeriodTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = {-1})
+    @ValueSource(ints = {-1, 10})
     @DisplayName("월경 기간의 값이 올바르지 않을 경우 예외를 반환한다.")
     void invalid_avg_menstruation_days(Integer days) {
 

@@ -57,16 +57,17 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         @Test
         @DisplayName("월경 주기 요청이 정상적일 경우 생성된 월경주기 객체의 id를 반환한다.")
         void register_menstruation_period_success() {
-            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 7);
 
             Long resultId = menstruationService.registerPeriod(CLEAR_MEMBER_ID, request);
 
             assertThat(resultId).isNotNull();
         }
+
         @Test
         @DisplayName("이미 사용자의 월경 주기 정보가 등록되어 있는 경우 예외를 반환한다.")
         void already_menstruation_period_registered() {
-            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 14);
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(28, 7);
 
             menstruationService.registerPeriod(CLEAR_MEMBER_ID, request);
 
@@ -135,8 +136,8 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         }
 
         @Test
-        @DisplayName("최근 등록된 월경 기록들간의 간격이 3개월 이상이라면 회원의 평균 월경주기를 업데이트 하지 않는다.")
-        void latest_menstruation_history_is_before_three_month() {
+        @DisplayName("최근 3개월 간의 기록들을 기준으로 평균 주기를 계산했을때 최대, 최소를 벗어날 경우 회원의 평균 월경주기를 업데이트 하지 않는다.")
+        void period_average_is_out_of_bound() {
             MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
             MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
 

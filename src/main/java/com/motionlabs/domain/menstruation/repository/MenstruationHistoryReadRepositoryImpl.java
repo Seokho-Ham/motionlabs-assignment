@@ -4,6 +4,7 @@ import static com.motionlabs.domain.menstruation.QMenstruationHistory.menstruati
 
 import com.motionlabs.domain.menstruation.MenstruationHistory;
 import com.motionlabs.ui.dto.MenstruationOvulationResponse;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -27,7 +28,7 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
         return queryFactory.select(menstruationHistory)
             .from(menstruationHistory)
             .where(memberIdEq(memberId))
-            .orderBy(menstruationHistory.menstruationDates.menstruationStartDate.asc())
+            .orderBy(startDateDesc())
             .limit(maxTerm)
             .fetch();
     }
@@ -70,6 +71,7 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
             ))
             .from(menstruationHistory)
             .where(memberIdEq(memberId))
+            .orderBy(startDateAsc())
             .fetch();
 
     }
@@ -88,6 +90,14 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
 
     private static BooleanExpression memberIdEq(Long memberId) {
         return menstruationHistory.member.id.eq(memberId);
+    }
+
+    private static OrderSpecifier<LocalDate> startDateAsc() {
+        return menstruationHistory.menstruationDates.menstruationStartDate.asc();
+    }
+
+    private static OrderSpecifier<LocalDate> startDateDesc() {
+        return menstruationHistory.menstruationDates.menstruationStartDate.desc();
     }
 
 }

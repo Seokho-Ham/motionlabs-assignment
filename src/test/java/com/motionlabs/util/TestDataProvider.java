@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class TestDataProvider {
 
     private static final int PERIOD = 28;
-    private static final int DAYS = 10;
+    private static final int DAYS = 7;
 
 
     @Autowired
