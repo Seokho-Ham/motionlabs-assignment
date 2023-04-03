@@ -9,7 +9,7 @@ import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotF
 import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
-import com.motionlabs.domain.menstruation.MenstruationPeriodRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
@@ -77,6 +77,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
     @Nested
     @DisplayName("[월경 기록 등록 API]")
     class MenstruationHistoryRegister {
+
         @Test
         @DisplayName("월경 기록 등록 요청이 정상적일 경우 생성된 월경기록 객체의 id를 반환한다.")
         void register_menstruation_history_success() {
@@ -242,6 +243,18 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             assertThatThrownBy(() -> menstruationService.deleteHistory(MEMBER_ID_WITH_HISTORIES, targetStartDate))
                 .isInstanceOf(MenstruationHistoryNotFound.class);
         }
+    }
+
+    @Nested
+    @DisplayName("[월경 기록 조회 API]")
+    class GetMenstruationHistory {
+
+        @Test
+        @DisplayName("월경 기록 조회 요청이 올바를 경우 월경기록 목록을 반환한다.")
+        void get_ovulation_histories_success() {
+
+        }
+
     }
 
 

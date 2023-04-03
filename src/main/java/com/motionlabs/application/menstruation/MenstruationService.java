@@ -5,18 +5,17 @@ import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotF
 import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.member.Member;
-import com.motionlabs.domain.member.MemberRepository;
+import com.motionlabs.domain.member.repository.MemberRepository;
 import com.motionlabs.domain.menstruation.MenstruationHistory;
-import com.motionlabs.domain.menstruation.MenstruationHistoryRepository;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
-import com.motionlabs.domain.menstruation.MenstruationPeriodRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationHistoryRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,7 @@ public class MenstruationService {
     @Transactional
     public Long registerPeriod(Long memberId, MenstruationPeriodRequest request) {
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findMemberById(memberId)
             .orElseThrow(MemberNotFoundException::new);
 
         if (periodRepository.existsByMemberId(member.getId())) {
@@ -52,7 +51,7 @@ public class MenstruationService {
     @Transactional
     public Long registerHistory(Long memberId, MenstruationHistoryRequest request) {
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findMemberById(memberId)
             .orElseThrow(MemberNotFoundException::new);
         MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
                 memberId)
@@ -70,7 +69,7 @@ public class MenstruationService {
     @Transactional
     public Long deleteHistory(Long memberId, LocalDate targetStartDate) {
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findMemberById(memberId)
             .orElseThrow(MemberNotFoundException::new);
         MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
                 memberId)
@@ -91,7 +90,7 @@ public class MenstruationService {
     protected void updateMemberMenstruationPeriod(Long memberId,
         MenstruationPeriod menstruationPeriod) {
         List<MenstruationHistory> latestHistories = historyRepository.findLatestHistoriesByMemberId(
-            memberId, Pageable.ofSize(MAX_MENSTRUATION_AVG));
+            memberId, MAX_MENSTRUATION_AVG);
 
         if (latestHistories.size() < 2) {
             return;
@@ -107,7 +106,7 @@ public class MenstruationService {
     private void saveMenstruationHistory(MenstruationHistoryRequest request,
         MenstruationHistory menstruationHistory) {
         if (historyRepository.existsTargetDate(menstruationHistory.getMember().getId(),
-            request.getMenstruationStartDate()).isPresent()) {
+            request.getMenstruationStartDate())) {
             throw new DuplicatedMenstruationHistoryException();
         }
 

@@ -2,11 +2,11 @@ package com.motionlabs.util;
 
 import com.motionlabs.application.menstruation.MenstruationConverter;
 import com.motionlabs.domain.member.Member;
-import com.motionlabs.domain.member.MemberRepository;
+import com.motionlabs.domain.member.repository.MemberRepository;
 import com.motionlabs.domain.menstruation.MenstruationHistory;
-import com.motionlabs.domain.menstruation.MenstruationHistoryRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationHistoryRepository;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
-import com.motionlabs.domain.menstruation.MenstruationPeriodRepository;
+import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
