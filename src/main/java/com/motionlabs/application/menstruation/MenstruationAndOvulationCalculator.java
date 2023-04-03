@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MenstruationAndOvulationCalculator {
 
+    private static final int MAX_TERM = 90;
     private static final int OVULATION_START_CALCULATE_DAYS = 19;
     private static final int OVULATION_END_CALCULATE_DAYS = 11;
 
@@ -29,6 +30,10 @@ public class MenstruationAndOvulationCalculator {
                 history2.getMenstruationStartDate(),
                 history1.getMenstruationStartDate()
             );
+        }
+
+        if (totalPeriods > MAX_TERM) {
+            return 0;
         }
 
         return totalPeriods / latestHistories.size() - 1;

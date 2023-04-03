@@ -3,6 +3,8 @@ package com.motionlabs.ui.menstruation;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,11 @@ public interface MenstruationSnippets {
     Snippet REGISTER_MENSTRUATION_HISTORY_REQUEST = requestFields(
         fieldWithPath("menstruationStartDate").type(JsonFieldType.ARRAY)
             .description("월경 시작일 / 형식: yyyy-MM-dd")
+    );
+
+    Snippet DELETE_MENSTRUATION_HISTORY_REQUEST = requestParameters(
+        parameterWithName("targetStartDate").description("삭제할 월경 시작일")
+
     );
 
 }
