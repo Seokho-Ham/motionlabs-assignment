@@ -20,11 +20,14 @@ import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -148,17 +151,20 @@ public class MenstruationIntegrationTest extends IntegrationTest {
 
         }
 
-        @Test
+        @ParameterizedTest
+        @MethodSource("com.motionlabs.integration.menstruation.MenstruationIntegrationTest#menstruationHistoryData")
         @DisplayName("최근 3개월 간의 기록들을 기준으로 평균 주기를 계산했을때 최대, 최소를 벗어날 경우 회원의 평균 월경주기를 업데이트 하지 않는다.")
-        void period_average_is_out_of_bound() {
-            MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
-            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
+        void period_average_is_out_of_bound(String date1, String date2, String date3) {
+            MenstruationHistoryRequest request1 = new MenstruationHistoryRequest(date1);
+            MenstruationHistoryRequest request2 = new MenstruationHistoryRequest(date2);
+            MenstruationHistoryRequest request3 = new MenstruationHistoryRequest(date3);
 
             MenstruationPeriod beforeUpdate = periodRepository.findByMemberId(
                 MEMBER_ID_WITH_PERIOD).get();
 
-            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, latestRequest);
-            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, currentRequest);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request1);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request2);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request3);
 
             MenstruationPeriod afterUpdate = periodRepository.findByMemberId(
                 MEMBER_ID_WITH_PERIOD).get();
@@ -316,5 +322,11 @@ public class MenstruationIntegrationTest extends IntegrationTest {
 
     }
 
+    public static Stream<Arguments> menstruationHistoryData() {
+        return Stream.of(
+            Arguments.arguments("2021-01-01", "2022-01-01", "2023-01-01"),
+            Arguments.arguments("2023-01-01", "2022-01-01", "2022-10-01")
+        );
+    }
 
 }

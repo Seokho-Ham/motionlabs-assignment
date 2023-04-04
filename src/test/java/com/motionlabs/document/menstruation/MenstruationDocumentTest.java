@@ -1,20 +1,20 @@
-package com.motionlabs.ui.menstruation;
+package com.motionlabs.document.menstruation;
 
 import static com.motionlabs.ui.dto.ResponseMessages.DELETE_MENSTRUATION_HISTORY_SUCCESS;
 import static com.motionlabs.ui.dto.ResponseMessages.READ_ALL_MENSTRUATION_HISTORIES_SUCCESS;
 import static com.motionlabs.ui.dto.ResponseMessages.REGISTER_MENSTRUATION_HISTORY_SUCCESS;
 import static com.motionlabs.ui.dto.ResponseMessages.REGISTER_MENSTRUATION_PERIOD_SUCCESS;
-import static com.motionlabs.ui.menstruation.MenstruationSnippets.DELETE_MENSTRUATION_HISTORY_REQUEST;
-import static com.motionlabs.ui.menstruation.MenstruationSnippets.GET_MENSTRUATION_HISTORIES_RESPONSE;
-import static com.motionlabs.ui.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_HISTORY_REQUEST;
-import static com.motionlabs.ui.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_PERIOD_REQUEST;
-import static com.motionlabs.ui.menstruation.MenstruationSnippets.createCommonNoDataSnippet;
+import static com.motionlabs.document.menstruation.MenstruationSnippets.DELETE_MENSTRUATION_HISTORY_REQUEST;
+import static com.motionlabs.document.menstruation.MenstruationSnippets.GET_MENSTRUATION_HISTORIES_RESPONSE;
+import static com.motionlabs.document.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_HISTORY_REQUEST;
+import static com.motionlabs.document.menstruation.MenstruationSnippets.REGISTER_MENSTRUATION_PERIOD_REQUEST;
+import static com.motionlabs.document.menstruation.MenstruationSnippets.createCommonNoDataSnippet;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
 
-import com.motionlabs.ui.RestDocsTest;
+import com.motionlabs.document.RestDocsTest;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
