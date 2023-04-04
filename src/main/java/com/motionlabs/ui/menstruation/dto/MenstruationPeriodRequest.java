@@ -1,7 +1,7 @@
 package com.motionlabs.ui.menstruation.dto;
 
-import com.motionlabs.domain.member.Member;
-import com.motionlabs.domain.menstruation.MenstruationPeriod;
+import com.motionlabs.core.domain.member.Member;
+import com.motionlabs.core.domain.menstruation.MenstruationPeriod;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

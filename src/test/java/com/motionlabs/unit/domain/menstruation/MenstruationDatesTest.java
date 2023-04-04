@@ -2,8 +2,8 @@ package com.motionlabs.unit.domain.menstruation;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
-import com.motionlabs.domain.menstruation.MenstruationDates;
+import com.motionlabs.core.application.menstruation.exception.InvalidMenstruationDate;
+import com.motionlabs.core.domain.menstruation.MenstruationDates;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.DisplayName;

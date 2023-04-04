@@ -3,9 +3,9 @@ package com.motionlabs.unit.domain.menstruation;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.motionlabs.domain.member.Member;
-import com.motionlabs.domain.menstruation.MenstruationPeriod;
-import com.motionlabs.domain.menstruation.exception.InvalidMenstruationPeriodException;
+import com.motionlabs.core.domain.member.Member;
+import com.motionlabs.core.domain.menstruation.MenstruationPeriod;
+import com.motionlabs.core.domain.menstruation.exception.InvalidMenstruationPeriodException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
