@@ -1,4 +1,4 @@
-package com.motionlabs.ui.menstruation;
+package com.motionlabs.document.menstruation;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -34,8 +34,8 @@ public interface MenstruationSnippets {
     }
     
     Snippet REGISTER_MENSTRUATION_PERIOD_REQUEST = requestFields(
-        fieldWithPath("avgMenstruationPeriod").type(JsonFieldType.NUMBER).description("월경 주기 / (일 단위)"),
-        fieldWithPath("avgMenstruationDays").type(JsonFieldType.NUMBER).description("월경 기간 / (일 단위)")
+        fieldWithPath("avgMenstruationPeriod").type(JsonFieldType.NUMBER).description("월경 주기 / 범위: 20 ~ 45 / (일 단위)"),
+        fieldWithPath("avgMenstruationDays").type(JsonFieldType.NUMBER).description("월경 기간 / 범위: 1 ~ 8 / (일 단위)")
     );
 
     Snippet REGISTER_MENSTRUATION_HISTORY_REQUEST = requestFields(

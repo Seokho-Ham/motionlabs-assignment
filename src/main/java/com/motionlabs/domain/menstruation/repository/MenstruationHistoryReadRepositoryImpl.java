@@ -38,8 +38,8 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
             .from(menstruationHistory)
             .where(
                 memberIdEq(memberId),
-                dateBefore(targetDate),
-                dateAfter(targetDate))
+                startDateBefore(targetDate),
+                endDateAfter(targetDate))
             .fetchFirst();
 
         return menstruationHistoryResult != null;
@@ -71,12 +71,12 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
         return menstruationHistory.menstruationDates.menstruationStartDate.eq(targetDate);
     }
 
-    private static BooleanExpression dateBefore(LocalDate targetDate) {
-        return menstruationHistory.menstruationDates.menstruationStartDate.before(targetDate);
+    private static BooleanExpression startDateBefore(LocalDate targetDate) {
+        return menstruationHistory.menstruationDates.menstruationStartDate.loe(targetDate);
     }
 
-    private static BooleanExpression dateAfter(LocalDate targetDate) {
-        return menstruationHistory.menstruationDates.menstruationEndDate.after(targetDate);
+    private static BooleanExpression endDateAfter(LocalDate targetDate) {
+        return menstruationHistory.menstruationDates.menstruationEndDate.goe(targetDate);
     }
 
     private static BooleanExpression memberIdEq(Long memberId) {

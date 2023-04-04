@@ -5,24 +5,30 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.motionlabs.application.member.exception.MemberNotFoundException;
 import com.motionlabs.application.menstruation.MenstruationService;
-import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
-import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
-import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
+import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
+import com.motionlabs.application.menstruation.exception.InvalidMenstruationDateException;
+import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFoundException;
+import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegisteredException;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
+import com.motionlabs.domain.menstruation.exception.InvalidMenstruationPeriodException;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.ui.menstruation.dto.MemberMenstruationHistoryResponse;
-import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("[통합] 월경 API 테스트")
@@ -73,6 +79,16 @@ public class MenstruationIntegrationTest extends IntegrationTest {
 
             assertThatThrownBy(() -> menstruationService.registerPeriod(CLEAR_MEMBER_ID, request))
                 .isInstanceOf(PeriodAlreadyRegisteredException.class);
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {-1, 0, 19, 56})
+        @DisplayName("범위를 벗어난 월경주기 정보를 등록할 경우 예외를 반환한다.")
+        void menstruation_period_out_of_bound(int period) {
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(period, 7);
+
+            assertThatThrownBy(() -> menstruationService.registerPeriod(CLEAR_MEMBER_ID, request))
+                .isInstanceOf(InvalidMenstruationPeriodException.class);
         }
 
     }
@@ -135,17 +151,20 @@ public class MenstruationIntegrationTest extends IntegrationTest {
 
         }
 
-        @Test
+        @ParameterizedTest
+        @MethodSource("com.motionlabs.integration.menstruation.MenstruationIntegrationTest#menstruationHistoryData")
         @DisplayName("최근 3개월 간의 기록들을 기준으로 평균 주기를 계산했을때 최대, 최소를 벗어날 경우 회원의 평균 월경주기를 업데이트 하지 않는다.")
-        void period_average_is_out_of_bound() {
-            MenstruationHistoryRequest latestRequest = new MenstruationHistoryRequest("2022-10-01");
-            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-01");
+        void period_average_is_out_of_bound(String date1, String date2, String date3) {
+            MenstruationHistoryRequest request1 = new MenstruationHistoryRequest(date1);
+            MenstruationHistoryRequest request2 = new MenstruationHistoryRequest(date2);
+            MenstruationHistoryRequest request3 = new MenstruationHistoryRequest(date3);
 
             MenstruationPeriod beforeUpdate = periodRepository.findByMemberId(
                 MEMBER_ID_WITH_PERIOD).get();
 
-            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, latestRequest);
-            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, currentRequest);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request1);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request2);
+            menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request3);
 
             MenstruationPeriod afterUpdate = periodRepository.findByMemberId(
                 MEMBER_ID_WITH_PERIOD).get();
@@ -154,10 +173,11 @@ public class MenstruationIntegrationTest extends IntegrationTest {
                 afterUpdate.getAvgMenstruationPeriod());
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"2023-03-01", "2023-03-05", "2023-03-08"})
         @DisplayName("동일한 기간에 중복되는 월경기록을 등록한다면 예외를 반환한다.")
-        void duplicated_history() {
-            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-05");
+        void duplicated_history(String date) {
+            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(date);
 
             assertThatThrownBy(
                 () -> menstruationService.registerHistory(MEMBER_ID_WITH_ONE_HISTORY, currentRequest))
@@ -170,7 +190,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
             assertThatThrownBy(() -> menstruationService.registerHistory(CLEAR_MEMBER_ID, request))
-                .isInstanceOf(MenstruationPeriodNotRegistered.class);
+                .isInstanceOf(MenstruationPeriodNotRegisteredException.class);
         }
 
         @Test
@@ -179,7 +199,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             MenstruationHistoryRequest request = new MenstruationHistoryRequest("9999-12-31");
 
             assertThatThrownBy(() -> menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request))
-                .isInstanceOf(InvalidMenstruationDate.class);
+                .isInstanceOf(InvalidMenstruationDateException.class);
 
         }
     }
@@ -244,7 +264,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             assertThatThrownBy(() -> menstruationService.deleteHistory(MEMBER_ID_WITH_HISTORIES, targetStartDate))
-                .isInstanceOf(MenstruationHistoryNotFound.class);
+                .isInstanceOf(MenstruationHistoryNotFoundException.class);
         }
     }
 
@@ -296,11 +316,17 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         void period_not_registered() {
 
             assertThatThrownBy(() -> menstruationService.getMenstruationHistories(CLEAR_MEMBER_ID))
-                .isInstanceOf(MenstruationPeriodNotRegistered.class);
+                .isInstanceOf(MenstruationPeriodNotRegisteredException.class);
 
         }
 
     }
 
+    public static Stream<Arguments> menstruationHistoryData() {
+        return Stream.of(
+            Arguments.arguments("2021-01-01", "2022-01-01", "2023-01-01"),
+            Arguments.arguments("2023-01-01", "2022-01-01", "2022-10-01")
+        );
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.motionlabs.ui;
+package com.motionlabs.document;
 
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
