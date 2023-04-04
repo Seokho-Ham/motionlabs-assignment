@@ -3,9 +3,7 @@ package com.motionlabs.domain.menstruation.repository;
 import static com.motionlabs.domain.menstruation.QMenstruationHistory.menstruationHistory;
 
 import com.motionlabs.domain.menstruation.MenstruationHistory;
-import com.motionlabs.ui.dto.MenstruationOvulationResponse;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -60,15 +58,8 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
     }
 
     @Override
-    public List<MenstruationOvulationResponse> findAllHistories(Long memberId) {
-        return queryFactory.select(Projections.constructor(MenstruationOvulationResponse.class,
-                menstruationHistory.menstruationDates.menstruationStartDate,
-                menstruationHistory.menstruationDates.menstruationEndDate,
-                menstruationHistory.menstruationDates.menstruationDays,
-                menstruationHistory.ovulationDates.ovulationStartDate,
-                menstruationHistory.ovulationDates.ovulationEndDate,
-                menstruationHistory.ovulationDates.ovulationDays
-            ))
+    public List<MenstruationHistory> findAllHistories(Long memberId) {
+        return queryFactory.select(menstruationHistory)
             .from(menstruationHistory)
             .where(memberIdEq(memberId))
             .orderBy(startDateAsc())

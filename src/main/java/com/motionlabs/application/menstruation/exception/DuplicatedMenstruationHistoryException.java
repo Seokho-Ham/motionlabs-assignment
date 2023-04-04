@@ -1,4 +1,4 @@
-package com.motionlabs.integration.menstruation.exception;
+package com.motionlabs.application.menstruation.exception;
 
 import com.motionlabs.common.exception.MotionlabsRuntimeException;
 

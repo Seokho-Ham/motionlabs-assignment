@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-@DisplayName("단위 - 월경 주기 엔티티 테스트")
+@DisplayName("[단위] 월경 주기 엔티티 테스트")
 public class MenstruationPeriodTest {
 
     @Test

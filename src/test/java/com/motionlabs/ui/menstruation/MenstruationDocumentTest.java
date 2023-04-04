@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("문서 - 월경 API 문서 테스트")
+@DisplayName("[문서] 월경 API 문서 테스트")
 public class MenstruationDocumentTest extends RestDocsTest {
 
     private static long CLEAR_MEMBER_ID;

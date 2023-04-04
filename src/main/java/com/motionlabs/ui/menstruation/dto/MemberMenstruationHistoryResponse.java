@@ -1,4 +1,4 @@
-package com.motionlabs.ui.dto;
+package com.motionlabs.ui.menstruation.dto;
 
 import java.util.List;
 import lombok.Getter;

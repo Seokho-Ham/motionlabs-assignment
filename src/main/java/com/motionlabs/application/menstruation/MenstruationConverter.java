@@ -5,7 +5,7 @@ import com.motionlabs.domain.menstruation.MenstruationDates;
 import com.motionlabs.domain.menstruation.MenstruationHistory;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.OvulationDates;
-import com.motionlabs.ui.dto.MenstruationOvulationResponse;
+import com.motionlabs.ui.menstruation.dto.MenstruationOvulationResponse;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;

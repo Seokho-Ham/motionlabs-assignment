@@ -12,8 +12,8 @@ import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegistered
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
-import com.motionlabs.integration.menstruation.exception.DuplicatedMenstruationHistoryException;
-import com.motionlabs.ui.dto.MemberMenstruationHistoryResponse;
+import com.motionlabs.ui.menstruation.dto.MemberMenstruationHistoryResponse;
+import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;

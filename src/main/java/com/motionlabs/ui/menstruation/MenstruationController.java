@@ -2,7 +2,7 @@ package com.motionlabs.ui.menstruation;
 
 import com.motionlabs.application.menstruation.MenstruationService;
 import com.motionlabs.ui.dto.CommonResponseEntity;
-import com.motionlabs.ui.dto.MemberMenstruationHistoryResponse;
+import com.motionlabs.ui.menstruation.dto.MemberMenstruationHistoryResponse;
 import com.motionlabs.ui.dto.ResponseMessages;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
