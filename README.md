@@ -24,7 +24,7 @@ $ java -jar motionlabs-assignment-0.0.1-SNAPSHOT.jar
 ```
 ### API 문서
 
-#### [링크](https://seokho-ham.github.io/motionlabs-assignment/src/main/resources/static/docs/index.html)
+### [API 문서 링크](https://seokho-ham.github.io/motionlabs-assignment/src/main/resources/static/docs/index.html)
 
 ### 요구사항 분석
 <details>
@@ -52,32 +52,32 @@ $ java -jar motionlabs-assignment-0.0.1-SNAPSHOT.jar
 </div>
 </details>
 
-### 테스트 결과 (총 32개)
+### 테스트 결과 (총 39개)
 
 <details>
 <summary>문서 테스트</summary>
 <div markdown="1">
-<img src="https://user-images.githubusercontent.com/57708971/229667017-2652eede-9582-423b-94bc-42e4a50082e7.png" witdh="450"/>
+<img src="https://user-images.githubusercontent.com/57708971/229692671-0946be10-cf6c-4fe9-9c36-c82fa12b934e.png" width="450"/>
 </div>
 </details>
 
 <details>
 <summary>통합 테스트</summary>
 <div markdown="1">
-<img src="https://user-images.githubusercontent.com/57708971/229667038-91156dfb-39c0-409c-ac56-4f84812ebe91.png" />
+<img src="https://user-images.githubusercontent.com/57708971/229692681-1f901204-bcfd-41b2-94e5-cd55e571fb7f.png"/>
 </div>
 </details>
 
 <details>
 <summary>단위 테스트</summary>
 <div markdown="1">
-<img src="https://user-images.githubusercontent.com/57708971/229666979-994bc56b-651f-43c6-bc76-afa4d7d7167a.png" width="450"/>
+<img src="https://user-images.githubusercontent.com/57708971/229692691-b1dbcbe5-dbd0-40e1-af55-1f061fa8c8bf.png" width="450"/>
 </div>
 </details>
 
 ### ERD
 
-![erd](https://user-images.githubusercontent.com/57708971/229665620-e1d99f0e-0726-4713-8dbd-fa5981855868.png)
+<img src="https://user-images.githubusercontent.com/57708971/229665620-e1d99f0e-0726-4713-8dbd-fa5981855868.png" width="550"/>
 
 ## 구현사항
 
@@ -90,9 +90,9 @@ $ java -jar motionlabs-assignment-0.0.1-SNAPSHOT.jar
 
 ### 테스트 작성
 - 각 기능마다 문서테스트와 통합테스트를 작성했습니다.
-- 외부에 의존하고 있는 부분이 DB를 제외하고는 업어서 각각의 별도로 모킹하지 않고 동일한 환경의 ApplicationContext를 사용해 테스트를 진행했습니다.
+- 외부에 의존하고 있는 부분이 DB를 제외하고는 없어서 서비스레이어에 대한 테스트를 통합테스트로 대체했습니다.
 - 도메인 객체에 대해 부분적으로 테스트를 작성했습니다.
-- DatabaseCleaner 클래스를 만들어 테스트환경 격리를 진행했습니다.
+- DatabaseCleaner 클래스를 만들어 테스트 환경 격리를 진행했습니다.
 
 ### 연관관계
 - 회원과 회원의 월경 주기는 1:1 관계를 갖습니다.
