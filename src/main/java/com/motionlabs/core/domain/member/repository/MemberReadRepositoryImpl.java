@@ -1,6 +1,6 @@
 package com.motionlabs.core.domain.member.repository;
 
-import static com.motionlabs.domain.member.QMember.member;
+import static com.motionlabs.core.domain.member.QMember.member;
 
 import com.motionlabs.core.domain.member.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;

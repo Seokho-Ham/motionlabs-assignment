@@ -1,6 +1,6 @@
 package com.motionlabs.core.domain.menstruation.repository;
 
-import static com.motionlabs.domain.menstruation.QMenstruationHistory.menstruationHistory;
+import static com.motionlabs.core.domain.menstruation.QMenstruationHistory.menstruationHistory;
 
 import com.motionlabs.core.domain.menstruation.MenstruationHistory;
 import com.motionlabs.ui.menstruation.dto.MenstruationOvulationResponse;
@@ -40,8 +40,8 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
             .from(menstruationHistory)
             .where(
                 memberIdEq(memberId),
-                dateBefore(targetDate),
-                dateAfter(targetDate))
+                startDateBefore(targetDate),
+                endDateAfter(targetDate))
             .fetchFirst();
 
         return menstruationHistoryResult != null;
@@ -80,11 +80,11 @@ public class MenstruationHistoryReadRepositoryImpl implements MenstruationHistor
         return menstruationHistory.menstruationDates.menstruationStartDate.eq(targetDate);
     }
 
-    private static BooleanExpression dateBefore(LocalDate targetDate) {
+    private static BooleanExpression startDateBefore(LocalDate targetDate) {
         return menstruationHistory.menstruationDates.menstruationStartDate.before(targetDate);
     }
 
-    private static BooleanExpression dateAfter(LocalDate targetDate) {
+    private static BooleanExpression endDateAfter(LocalDate targetDate) {
         return menstruationHistory.menstruationDates.menstruationEndDate.after(targetDate);
     }
 

@@ -1,6 +1,6 @@
 package com.motionlabs.core.domain.menstruation.repository;
 
-import static com.motionlabs.domain.menstruation.QMenstruationPeriod.menstruationPeriod;
+import static com.motionlabs.core.domain.menstruation.QMenstruationPeriod.menstruationPeriod;
 
 import com.motionlabs.core.domain.menstruation.MenstruationPeriod;
 import com.querydsl.core.types.dsl.BooleanExpression;
