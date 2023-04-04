@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.motionlabs.application.member.exception.MemberNotFoundException;
 import com.motionlabs.application.menstruation.MenstruationService;
+import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
 import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
 import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
@@ -13,7 +14,6 @@ import com.motionlabs.domain.menstruation.MenstruationPeriod;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.ui.menstruation.dto.MemberMenstruationHistoryResponse;
-import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
 import com.motionlabs.ui.menstruation.dto.MenstruationHistoryRequest;
 import com.motionlabs.ui.menstruation.dto.MenstruationPeriodRequest;
 import com.motionlabs.util.TestDataProvider;
@@ -23,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("[통합] 월경 API 테스트")
@@ -154,10 +156,11 @@ public class MenstruationIntegrationTest extends IntegrationTest {
                 afterUpdate.getAvgMenstruationPeriod());
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"2023-03-01", "2023-03-05"})
         @DisplayName("동일한 기간에 중복되는 월경기록을 등록한다면 예외를 반환한다.")
-        void duplicated_history() {
-            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest("2023-03-05");
+        void duplicated_history(String date) {
+            MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(date);
 
             assertThatThrownBy(
                 () -> menstruationService.registerHistory(MEMBER_ID_WITH_ONE_HISTORY, currentRequest))
