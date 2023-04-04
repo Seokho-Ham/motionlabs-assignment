@@ -1,6 +1,6 @@
 package com.motionlabs.domain.menstruation;
 
-import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
+import com.motionlabs.application.menstruation.exception.InvalidMenstruationDateException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class MenstruationDates {
     private void validateStartDate(LocalDate menstruationStartDate) {
         if (Objects.isNull(menstruationStartDate)
             || menstruationStartDate.isAfter(LocalDate.now())) {
-            throw new InvalidMenstruationDate();
+            throw new InvalidMenstruationDateException();
         }
     }
 

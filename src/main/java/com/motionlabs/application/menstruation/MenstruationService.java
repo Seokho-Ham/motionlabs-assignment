@@ -1,8 +1,8 @@
 package com.motionlabs.application.menstruation;
 
 import com.motionlabs.application.member.exception.MemberNotFoundException;
-import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
-import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
+import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFoundException;
+import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegisteredException;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.member.Member;
 import com.motionlabs.domain.member.repository.MemberRepository;
@@ -44,7 +44,7 @@ public class MenstruationService {
 
         MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
                 memberId)
-            .orElseThrow(MenstruationPeriodNotRegistered::new);
+            .orElseThrow(MenstruationPeriodNotRegisteredException::new);
 
         List<MenstruationHistory> histories = historyRepository.findAllHistories(
             memberId);
@@ -75,7 +75,7 @@ public class MenstruationService {
             .orElseThrow(MemberNotFoundException::new);
         MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
                 memberId)
-            .orElseThrow(MenstruationPeriodNotRegistered::new);
+            .orElseThrow(MenstruationPeriodNotRegisteredException::new);
         MenstruationHistory menstruationHistory = converter.convertToEntity(member,
             menstruationPeriod, request);
 
@@ -92,11 +92,11 @@ public class MenstruationService {
             .orElseThrow(MemberNotFoundException::new);
         MenstruationPeriod menstruationPeriod = periodRepository.findByMemberId(
                 memberId)
-            .orElseThrow(MenstruationPeriodNotRegistered::new);
+            .orElseThrow(MenstruationPeriodNotRegisteredException::new);
 
         MenstruationHistory menstruationHistory = historyRepository.findByTargetDate(memberId,
                 targetStartDate)
-            .orElseThrow(MenstruationHistoryNotFound::new);
+            .orElseThrow(MenstruationHistoryNotFoundException::new);
 
         historyRepository.delete(menstruationHistory);
 

@@ -6,11 +6,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.motionlabs.application.member.exception.MemberNotFoundException;
 import com.motionlabs.application.menstruation.MenstruationService;
 import com.motionlabs.application.menstruation.exception.DuplicatedMenstruationHistoryException;
-import com.motionlabs.application.menstruation.exception.InvalidMenstruationDate;
-import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFound;
-import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegistered;
+import com.motionlabs.application.menstruation.exception.InvalidMenstruationDateException;
+import com.motionlabs.application.menstruation.exception.MenstruationHistoryNotFoundException;
+import com.motionlabs.application.menstruation.exception.MenstruationPeriodNotRegisteredException;
 import com.motionlabs.application.menstruation.exception.PeriodAlreadyRegisteredException;
 import com.motionlabs.domain.menstruation.MenstruationPeriod;
+import com.motionlabs.domain.menstruation.exception.InvalidMenstruationPeriodException;
 import com.motionlabs.domain.menstruation.repository.MenstruationPeriodRepository;
 import com.motionlabs.integration.IntegrationTest;
 import com.motionlabs.ui.menstruation.dto.MemberMenstruationHistoryResponse;
@@ -75,6 +76,16 @@ public class MenstruationIntegrationTest extends IntegrationTest {
 
             assertThatThrownBy(() -> menstruationService.registerPeriod(CLEAR_MEMBER_ID, request))
                 .isInstanceOf(PeriodAlreadyRegisteredException.class);
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {-1, 0, 19, 56})
+        @DisplayName("범위를 벗어난 월경주기 정보를 등록할 경우 예외를 반환한다.")
+        void menstruation_period_out_of_bound(int period) {
+            MenstruationPeriodRequest request = new MenstruationPeriodRequest(period, 7);
+
+            assertThatThrownBy(() -> menstruationService.registerPeriod(CLEAR_MEMBER_ID, request))
+                .isInstanceOf(InvalidMenstruationPeriodException.class);
         }
 
     }
@@ -157,7 +168,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"2023-03-01", "2023-03-05"})
+        @ValueSource(strings = {"2023-03-01", "2023-03-05", "2023-03-08"})
         @DisplayName("동일한 기간에 중복되는 월경기록을 등록한다면 예외를 반환한다.")
         void duplicated_history(String date) {
             MenstruationHistoryRequest currentRequest = new MenstruationHistoryRequest(date);
@@ -173,7 +184,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             MenstruationHistoryRequest request = new MenstruationHistoryRequest("2023-03-01");
 
             assertThatThrownBy(() -> menstruationService.registerHistory(CLEAR_MEMBER_ID, request))
-                .isInstanceOf(MenstruationPeriodNotRegistered.class);
+                .isInstanceOf(MenstruationPeriodNotRegisteredException.class);
         }
 
         @Test
@@ -182,7 +193,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
             MenstruationHistoryRequest request = new MenstruationHistoryRequest("9999-12-31");
 
             assertThatThrownBy(() -> menstruationService.registerHistory(MEMBER_ID_WITH_PERIOD, request))
-                .isInstanceOf(InvalidMenstruationDate.class);
+                .isInstanceOf(InvalidMenstruationDateException.class);
 
         }
     }
@@ -247,7 +258,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             assertThatThrownBy(() -> menstruationService.deleteHistory(MEMBER_ID_WITH_HISTORIES, targetStartDate))
-                .isInstanceOf(MenstruationHistoryNotFound.class);
+                .isInstanceOf(MenstruationHistoryNotFoundException.class);
         }
     }
 
@@ -299,7 +310,7 @@ public class MenstruationIntegrationTest extends IntegrationTest {
         void period_not_registered() {
 
             assertThatThrownBy(() -> menstruationService.getMenstruationHistories(CLEAR_MEMBER_ID))
-                .isInstanceOf(MenstruationPeriodNotRegistered.class);
+                .isInstanceOf(MenstruationPeriodNotRegisteredException.class);
 
         }
 
